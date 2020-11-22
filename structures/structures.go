@@ -49,8 +49,8 @@ func GetDaysElapsed(date []string, hour []int32, minute []int32) float64 {
 	return days
 }
 
-//NewGetDaysElapsed x
-func NewGetDaysElapsed(date []string) float64 {
+//DaysElapsedFromLastBuji x
+func DaysElapsedFromLastBuji(date []string) float64 {
 	counter := 1.0
 	for i := 2; i < len(date); i++ {
 		if date[i-1] != date[i] {
@@ -83,7 +83,7 @@ func GetDailyAvgQty(date []string, quantity []float64) float64 {
 	for i := 0; i < len(quantity); i++ {
 		sum += quantity[i]
 	}
-	return sum / NewGetDaysElapsed(date)
+	return sum / DaysElapsedFromLastBuji(date)
 }
 
 // GetRemainingDays x
