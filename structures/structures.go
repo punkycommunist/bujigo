@@ -19,7 +19,7 @@ func GetRoundedAvgQuantity(arr []float64) float64 {
 	return roundedAvgQuantity
 }
 
-// GetStringTimeInterval x
+// GetStringTimeInterval returns a string that represent the time interval between the first buji on record and the last one
 func GetStringTimeInterval(dates []string) string {
 	s1 := dates[1]
 	s2 := dates[len(dates)-1]
