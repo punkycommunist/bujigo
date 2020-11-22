@@ -49,7 +49,7 @@ func GetDaysElapsed(date []string, hour []int32, minute []int32) float64 {
 	return days
 }
 
-//DaysElapsedFromLastBuji x
+//DaysElapsedFromLastBuji returns the number of days elapsed from the last buji on the record
 func DaysElapsedFromLastBuji(date []string) float64 {
 	counter := 1.0
 	for i := 2; i < len(date); i++ {

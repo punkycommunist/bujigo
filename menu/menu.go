@@ -17,7 +17,7 @@ func PrintMenu(date []string, quantity []float64, quality []string, method []str
 	fmt.Println("Buji fumati: " + fmt.Sprint(smokedBuji))
 	fmt.Println("Media quantita' materiale: " + sRounded)
 	fmt.Print("Media buji al giorno: ")
-	fmt.Println(fmt.Sprintf("%.2f", float64(smokedBuji)/s.NewGetDaysElapsed(date)))
+	fmt.Println(fmt.Sprintf("%.2f", float64(smokedBuji)/s.DaysElapsedFromLastBuji(date)))
 	fmt.Print("Ora piu' frequente: ")
 	fmt.Println(s.GetBestHour(hour))
 	fmt.Println("Quantita' media al giorno: " + fmt.Sprintf("%.2f", s.GetDailyAvgQty(date, quantity)))
@@ -33,7 +33,7 @@ func SpecialFunctions(date []string, quantity []float64, quality []string, metho
 	fmt.Println("\n\nFunzioni speciali!")
 	for selection != "q" {
 		fmt.Println("[a] Aggiungi un buji!")
-		fmt.Println("[s] Mostra gli ultimi 5 buji!")
+		fmt.Println("[s] Mostra gli ultimi buji!")
 		fmt.Println("[c] Per calcolare i giorni rimanenti fumando una certa quantita' al giorno.")
 		fmt.Println("[h] Quanto devo fumare per farmi durare il materiale per un numero personalizzato di giorni?")
 		fmt.Scanf("%s", &selection)
