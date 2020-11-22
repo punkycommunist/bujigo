@@ -19,7 +19,6 @@ func StartBujiSequence() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("Found " + filename)
 	defer f.Close()
 
 	in := bufio.NewReader(os.Stdin)
@@ -39,7 +38,6 @@ func StartBujiSequence() {
 		t++
 		values[1] = strconv.Itoa(t)
 	}
-	fmt.Println(values[0] + values[1])
 	fmt.Println("Quantita': ")
 	values[1], err = in.ReadString('\n')
 	fmt.Println("Qualita': ")
@@ -49,7 +47,7 @@ func StartBujiSequence() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	for i := 0; i < len(values); i++ {
+	for i := 1; i < len(values); i++ {
 		values[i] = values[i][0 : len(values[i])-1]
 	}
 	s := "\n" + values[0] + "," + values[1] + "," + values[2] + "," + values[3] + "," + values[4] + ","
