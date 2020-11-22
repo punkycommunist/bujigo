@@ -8,13 +8,13 @@ import (
 	"time"
 )
 
-// GetRoundedAvgQuantity x
-func GetRoundedAvgQuantity(arr []float64) float64 {
+// GetRoundedAvgQuantity returns how much did you smoke on average per day
+func GetRoundedAvgQuantity(quantity []float64) float64 {
 	var sumQuantity float64
-	for i := 0; i < len(arr); i++ {
-		sumQuantity += arr[i]
+	for i := 0; i < len(quantity); i++ {
+		sumQuantity += quantity[i]
 	}
-	avgQuantity := sumQuantity / float64(len(arr)-1.0)
+	avgQuantity := sumQuantity / float64(len(quantity)-1.0)
 	roundedAvgQuantity := math.Round(avgQuantity*100.0) / 100.0
 	return roundedAvgQuantity
 }
@@ -60,7 +60,7 @@ func DaysElapsedFromLastBuji(date []string) float64 {
 	return counter
 }
 
-//GetBestHour x
+//GetBestHour returns the most occurrent hour
 func GetBestHour(hour []int32) int32 {
 	var hours [24]int32
 	for i := 1; i < len(hour); i++ {
@@ -77,7 +77,7 @@ func GetBestHour(hour []int32) int32 {
 	return last
 }
 
-//GetDailyAvgQty x
+//GetDailyAvgQty returns how much you smoke a day on average
 func GetDailyAvgQty(date []string, quantity []float64) float64 {
 	sum := 0.0
 	for i := 0; i < len(quantity); i++ {
@@ -86,25 +86,25 @@ func GetDailyAvgQty(date []string, quantity []float64) float64 {
 	return sum / DaysElapsedFromLastBuji(date)
 }
 
-// GetRemainingDays x
+// GetRemainingDays returns how many days you got left before finishing supplies at this rate
 func GetRemainingDays(date []string, quantity []float64, remains float64) float64 {
 	return remains / GetDailyAvgQty(date, quantity)
 }
 
-// HowManyDaysWithCustom x
+// HowManyDaysWithCustom returns how many days the supplies are gonna last with a specific amount a day
 func HowManyDaysWithCustom(quantity []float64, remains float64, quantityPerDay float64) float64 {
 	fmt.Println("Giorni rimanenti a finire per uno " + fmt.Sprintf("%.2f", quantityPerDay) + " al giorno: " + fmt.Sprintf("%.2f", remains/quantityPerDay))
 	return remains / quantityPerDay
 }
 
-// HowMuchQuantityWithCustomDays x
+// HowMuchQuantityWithCustomDays returns how much you would have to smoke a day to endure the supplies x days
 func HowMuchQuantityWithCustomDays(quantity []float64, remains float64, days float64) float64 {
 	fmt.Println("Dovrai fumare " + fmt.Sprintf("%.2f", remains/days))
 	return remains / days
 }
 
-// ShowLastFiveBujis x
-func ShowLastFiveBujis(date []string, quantity []float64, quality []string, method []string, hour []int32, remains float64, n int) {
+// ShowLastBujis x
+func ShowLastBujis(date []string, quantity []float64, quality []string, method []string, hour []int32, remains float64, n int) {
 	fmt.Println("Data\t\tOra\tQuantita'\tQualita'\tTipo")
 	for i := len(date) - 1; i > len(date)-1-n; i-- {
 		fmt.Println(date[i] + "\t" + fmt.Sprintf("%d", hour[i]) + "\t" + fmt.Sprintf("%.2f", quantity[i]) + "\t\t" + quality[i] + "\t" + method[i])

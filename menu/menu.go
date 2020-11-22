@@ -7,7 +7,7 @@ import (
 	s "github.com/punkycommunist/bujigo/structures"
 )
 
-//PrintMenu x
+//PrintMenu is a general stats printout
 func PrintMenu(date []string, quantity []float64, quality []string, method []string, hour []int32, remains float64) {
 	timeInterval := s.GetStringTimeInterval(date)
 	rounded := s.GetRoundedAvgQuantity(quantity)
@@ -27,7 +27,7 @@ func PrintMenu(date []string, quantity []float64, quality []string, method []str
 	SpecialFunctions(date, quantity, quality, method, hour, remains)
 }
 
-//SpecialFunctions x
+//SpecialFunctions is a menu with a for loop that operates "special functions"
 func SpecialFunctions(date []string, quantity []float64, quality []string, method []string, hour []int32, remains float64) {
 	var selection string
 	fmt.Println("\n\nFunzioni speciali!")
@@ -46,7 +46,7 @@ func SpecialFunctions(date []string, quantity []float64, quality []string, metho
 			var n int
 			fmt.Println("Quanti ultimi buji?")
 			fmt.Scan(&n)
-			s.ShowLastFiveBujis(date, quantity, quality, method, hour, remains, n)
+			s.ShowLastBujis(date, quantity, quality, method, hour, remains, n)
 			break
 
 		case "c":
