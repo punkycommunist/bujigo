@@ -31,7 +31,7 @@ func GetBujiNumber(dates []string) int {
 	return len(dates) - 1
 }
 
-//GetDaysElapsed x
+//GetDaysElapsed returns how many days have passed from the start of records
 func GetDaysElapsed(date []string, hour []int32, minute []int32) float64 {
 	l := len(date) - 1
 	fDay, err := strconv.Atoi(date[1][0:2])
