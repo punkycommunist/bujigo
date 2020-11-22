@@ -5,7 +5,6 @@ DATA,QUANTITA',QUALITA',METODO,ORE
 TODO:
 Calculate over how many days i smoked the last x weight
 Calculate how much i smoked on the last x days
-CCC
 */
 
 package main
