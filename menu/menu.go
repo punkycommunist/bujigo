@@ -4,27 +4,26 @@ import (
 	"fmt"
 
 	i "github.com/punkycommunist/bujigo/io"
-	"github.com/punkycommunist/bujigo/structures"
 	s "github.com/punkycommunist/bujigo/structures"
 )
 
 //PrintMenu x
 func PrintMenu(date []string, quantity []float64, quality []string, method []string, hour []int32, remains float64) {
-	timeInterval := structures.GetStringTimeInterval(date)
-	rounded := structures.GetRoundedAvgQuantity(quantity)
+	timeInterval := s.GetStringTimeInterval(date)
+	rounded := s.GetRoundedAvgQuantity(quantity)
 	sRounded := fmt.Sprintf("%.2f", rounded)
-	smokedBuji := structures.GetBujiNumber(date)
+	smokedBuji := s.GetBujiNumber(date)
 	fmt.Println("Intervallo " + timeInterval)
 	fmt.Println("Buji fumati: " + fmt.Sprint(smokedBuji))
 	fmt.Println("Media quantita' materiale: " + sRounded)
 	fmt.Print("Media buji al giorno: ")
-	fmt.Println(fmt.Sprintf("%.2f", float64(smokedBuji)/structures.NewGetDaysElapsed(date)))
+	fmt.Println(fmt.Sprintf("%.2f", float64(smokedBuji)/s.NewGetDaysElapsed(date)))
 	fmt.Print("Ora piu' frequente: ")
-	fmt.Println(structures.GetBestHour(hour))
-	fmt.Println("Quantita' media al giorno: " + fmt.Sprintf("%.2f", structures.GetDailyAvgQty(date, quantity)))
-	fmt.Println("Giorni rimasti a questo regime: " + fmt.Sprintf("%.2f", structures.GetRemainingDays(date, quantity, remains)))
+	fmt.Println(s.GetBestHour(hour))
+	fmt.Println("Quantita' media al giorno: " + fmt.Sprintf("%.2f", s.GetDailyAvgQty(date, quantity)))
+	fmt.Println("Giorni rimasti a questo regime: " + fmt.Sprintf("%.2f", s.GetRemainingDays(date, quantity, remains)))
 	fmt.Println("Quantita' rimasta da fumare: " + fmt.Sprintf("%.2f", remains))
-	fmt.Println("Oggi: " + structures.HowMuchLeftString(date, quantity, hour))
+	fmt.Println("Oggi: " + s.HowMuchLeftString(date, quantity, hour))
 	SpecialFunctions(date, quantity, quality, method, hour, remains)
 }
 
