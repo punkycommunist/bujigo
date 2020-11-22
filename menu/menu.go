@@ -32,7 +32,7 @@ func SpecialFunctions(date []string, quantity []float64, quality []string, metho
 	var selection string
 	fmt.Println("\n\nFunzioni speciali!")
 	for selection != "q" {
-		fmt.Println("[a] Aggiungi un buji!")
+		fmt.Println("[a] Aggiungi un buji!.")
 		fmt.Println("[s] Mostra gli ultimi buji!")
 		fmt.Println("[c] Per calcolare i giorni rimanenti fumando una certa quantita' al giorno.")
 		fmt.Println("[h] Quanto devo fumare per farmi durare il materiale per un numero personalizzato di giorni?")
