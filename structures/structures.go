@@ -26,7 +26,7 @@ func GetStringTimeInterval(dates []string) string {
 	return s1 + " - " + s2
 }
 
-// GetBujiNumber x
+// GetBujiNumber returns how many bujis got smoked in total
 func GetBujiNumber(dates []string) int {
 	return len(dates) - 1
 }
