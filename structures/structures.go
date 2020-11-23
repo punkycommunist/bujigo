@@ -128,3 +128,7 @@ func HowMuchLeftString(date []string, quantity []float64, hour []int32) string {
 
 	return "[" + fmt.Sprintf("%.2f", smokedToday) + "/" + fmt.Sprintf("%.2f", avg) + "] [Rimanenti: " + fmt.Sprintf("%.2f", avg-smokedToday) + "]"
 }
+func prompt(s string) {
+	fmt.Println(s)
+	fmt.Printf("$ ")
+}

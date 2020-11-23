@@ -22,7 +22,7 @@ func StartBujiSequence() {
 
 	var values [5]string
 	var isToday string
-	fmt.Println("Il buji e' stato fumato oggi? [y] per si, [n] per no e inserire la data.")
+	prompt("Il buji e' stato fumato oggi? [y] per si, [n] per no e inserire la data.")
 	fmt.Scan(&isToday)
 	if err != nil {
 		log.Fatal(err)
@@ -30,14 +30,14 @@ func StartBujiSequence() {
 	if isToday == "y" { //if [enter] gets pressed
 		values[0] = time.Now().Format("02/01/2006")
 	} else if isToday == "n" {
-		fmt.Println("Che giorno era?")
+		prompt("Che giorno era?")
 		fmt.Scan(&values[0])
 	} else { //if invalid character
 		log.Fatal(isToday + " invalid.")
 	}
 
 	var thisHour string
-	fmt.Println("Il buji e' stato fumato a quest'ora? [y] per si, [n] per no e inserire la data.")
+	prompt("Il buji e' stato fumato a quest'ora? [y] per si, [n] per no e inserire la data.")
 	fmt.Scan(&thisHour)
 	if err != nil {
 		log.Fatal(err)
@@ -51,7 +51,6 @@ func StartBujiSequence() {
 			log.Fatal(err)
 		}
 		if i >= 30 {
-			fmt.Println("run")
 			t, err := strconv.Atoi(values[4])
 			if err != nil {
 				log.Fatal(err)
@@ -60,16 +59,16 @@ func StartBujiSequence() {
 			values[4] = strconv.Itoa(t)
 		}
 	} else if thisHour == "n" {
-		fmt.Println("Che ore erano?")
+		prompt("Che ore erano?")
 		fmt.Scan(&values[4])
 	} else { //if invalid character
 		log.Fatal(thisHour + " invalid.")
 	}
-	fmt.Println("Quantita': ")
+	prompt("Quantita': ")
 	fmt.Scan(&values[1])
-	fmt.Println("Qualita': ")
+	prompt("Qualita': ")
 	fmt.Scan(&values[2])
-	fmt.Println("Utilizzo: ")
+	prompt("Utilizzo: ")
 	fmt.Scan(&values[3])
 
 	s := "\n" + values[0] + "," + values[1] + "," + values[2] + "," + values[3] + "," + values[4] + ","
@@ -94,14 +93,14 @@ func SearchCsvInCurrentDirectory() string {
 	}
 	log.Println("No .csv file found. Do you want to create the default [buji.csv]?")
 	material := 0.0
-	fmt.Println("How much material do you have to smoke? (1g = 1.0): ")
+	prompt("How much material do you have to smoke? (1g = 1.0): ")
 	fmt.Scanf("%f", &material)
 	f, err := os.OpenFile("buji.csv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
 	f.WriteString("giorno,quantita,qualita,tipo,ore," + fmt.Sprintf("%.2f", material))
-	fmt.Println("You have also to enter a buji to start. Press Enter.")
+	prompt("You have also to enter a buji to start. Press Enter.")
 	fmt.Scanln()
 	StartBujiSequence()
 	return "buji.csv"
@@ -125,4 +124,8 @@ func ReadCsv(filename string) ([][]string, error) {
 	}
 
 	return lines, nil
+}
+func prompt(s string) {
+	fmt.Println(s)
+	fmt.Printf("$ ")
 }

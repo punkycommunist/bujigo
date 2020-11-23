@@ -1,8 +1,28 @@
 package menu
 
+/*
+github.com/fatih/color
+# Plug into existing code
+
+// Use handy standard colors
+color.Set(color.FgYellow)
+
+fmt.Println("Existing text will now be in yellow")
+fmt.Printf("This one %s\n", "too")
+
+color.Unset() // Don't forget to unset
+
+// You can mix up parameters
+color.Set(color.FgMagenta, color.Bold)
+defer color.Unset() // Use it in your function
+
+fmt.Println("All text will now be bold magenta.")
+*/
+
 import (
 	"fmt"
 
+	color "github.com/fatih/color"
 	i "github.com/punkycommunist/bujigo/io"
 	s "github.com/punkycommunist/bujigo/structures"
 )
@@ -13,7 +33,9 @@ func PrintMenu(date []string, quantity []float64, quality []string, method []str
 	rounded := s.GetRoundedAvgQuantity(quantity)
 	sRounded := fmt.Sprintf("%.2f", rounded)
 	smokedBuji := s.GetBujiNumber(date)
-	fmt.Println("Intervallo " + timeInterval)
+	color.Set(color.FgYellow)
+	fmt.Printf("Intervallo " + timeInterval + "\n")
+	color.Unset()
 	fmt.Println("Buji fumati: " + fmt.Sprint(smokedBuji))
 	fmt.Println("Media quantita' materiale: " + sRounded)
 	fmt.Print("Media buji al giorno: ")
@@ -30,12 +52,12 @@ func PrintMenu(date []string, quantity []float64, quality []string, method []str
 //SpecialFunctions is a menu with a for loop that operates "special functions"
 func SpecialFunctions(date []string, quantity []float64, quality []string, method []string, hour []int32, remains float64) {
 	var selection string
-	fmt.Println("\n\nFunzioni speciali!")
+	color.Green("\n\nFunzioni speciali!")
 	for selection != "q" {
 		fmt.Println("[a] Aggiungi un buji!.")
 		fmt.Println("[s] Mostra gli ultimi buji!")
 		fmt.Println("[c] Per calcolare i giorni rimanenti fumando una certa quantita' al giorno.")
-		fmt.Println("[h] Quanto devo fumare per farmi durare il materiale per un numero personalizzato di giorni?")
+		prompt("[h] Quanto devo fumare per farmi durare il materiale per un numero personalizzato di giorni?")
 		fmt.Scanf("%s", &selection)
 		switch selection {
 		case "a":
@@ -44,21 +66,21 @@ func SpecialFunctions(date []string, quantity []float64, quality []string, metho
 
 		case "s":
 			var n int
-			fmt.Println("Quanti ultimi buji?")
+			prompt("Quanti ultimi buji?")
 			fmt.Scan(&n)
 			s.ShowLastBujis(date, quantity, quality, method, hour, remains, n)
 			break
 
 		case "c":
 			quantitaAlGiorno := 0.0
-			fmt.Println("Quale sarebbe la quantita' al giorno?")
+			prompt("Quale sarebbe la quantita' al giorno?")
 			fmt.Scan(&quantitaAlGiorno)
 			s.HowManyDaysWithCustom(quantity, remains, quantitaAlGiorno)
 			break
 
 		case "h":
 			giorni := 0.0
-			fmt.Println("Di quanti giorni stiamo parlando?")
+			prompt("Di quanti giorni stiamo parlando?")
 			fmt.Scan(&giorni)
 			s.HowMuchQuantityWithCustomDays(quantity, remains, giorni)
 			break
@@ -68,4 +90,9 @@ func SpecialFunctions(date []string, quantity []float64, quality []string, metho
 			break
 		}
 	}
+}
+
+func prompt(s string) {
+	fmt.Println(s)
+	fmt.Printf("$ ")
 }
