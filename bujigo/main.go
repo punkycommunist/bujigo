@@ -5,6 +5,9 @@ DATA,QUANTITA',QUALITA',METODO,ORE
 TODO:
 Calculate over how many days i smoked the last x weight
 Calculate how much i smoked on the last x day
+Consider day passed not as interval subtraction and as an integer but as a float64
+Update tools
+Optional PGP Encryption
 */
 
 package main

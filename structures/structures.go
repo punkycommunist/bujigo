@@ -9,12 +9,12 @@ import (
 )
 
 // GetRoundedAvgQuantity returns how much did you smoke on average per day
-func GetRoundedAvgQuantity(quantity []float64) float64 {
-	var sumQuantity float64
-	for i := 0; i < len(quantity); i++ {
+func GetRoundedAvgQuantity(quantity []float64, date []string, hour []int32) float64 {
+	sumQuantity := 0.0
+	for i := 1; i < len(quantity); i++ {
 		sumQuantity += quantity[i]
 	}
-	avgQuantity := sumQuantity / float64(len(quantity)-1.0)
+	avgQuantity := sumQuantity / GetDaysElapsed(date, hour)
 	roundedAvgQuantity := math.Round(avgQuantity*100.0) / 100.0
 	return roundedAvgQuantity
 }
@@ -32,7 +32,7 @@ func GetBujiNumber(dates []string) int {
 }
 
 //GetDaysElapsed returns how many days have passed from the start of records
-func GetDaysElapsed(date []string, hour []int32, minute []int32) float64 {
+func GetDaysElapsed(date []string, hour []int32) float64 {
 	l := len(date) - 1
 	fDay, err := strconv.Atoi(date[1][0:2])
 	fMonth, err := strconv.Atoi(date[1][3:5])
@@ -43,8 +43,8 @@ func GetDaysElapsed(date []string, hour []int32, minute []int32) float64 {
 	if err != nil {
 		log.Println(err)
 	}
-	t1 := time.Date(fYear, time.Month(fMonth), fDay, int(hour[1]), int(minute[1]), 0, 0, time.UTC)
-	t2 := time.Date(lYear, time.Month(lMonth), lDay, int(hour[l]), int(minute[l]), 0, 0, time.UTC)
+	t1 := time.Date(fYear, time.Month(fMonth), fDay, int(hour[1]), 0, 0, 0, time.UTC)
+	t2 := time.Date(lYear, time.Month(lMonth), lDay, int(hour[l]), 0, 0, 0, time.UTC)
 	days := t2.Sub(t1).Hours() / 24
 	return days
 }
@@ -80,7 +80,7 @@ func GetBestHour(hour []int32) int32 {
 //GetDailyAvgQty returns how much you smoke a day on average
 func GetDailyAvgQty(date []string, quantity []float64) float64 {
 	sum := 0.0
-	for i := 0; i < len(quantity); i++ {
+	for i := 1; i < len(quantity); i++ {
 		sum += quantity[i]
 	}
 	return sum / DaysElapsedFromLastBuji(date)

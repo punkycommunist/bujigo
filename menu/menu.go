@@ -11,7 +11,7 @@ import (
 //PrintMenu is a general stats printout
 func PrintMenu(date []string, quantity []float64, quality []string, method []string, hour []int32, remains float64) {
 	timeInterval := s.GetStringTimeInterval(date)
-	rounded := s.GetRoundedAvgQuantity(quantity)
+	rounded := s.GetRoundedAvgQuantity(quantity, date, hour)
 	sRounded := fmt.Sprintf("%.2f", rounded)
 	smokedBuji := s.GetBujiNumber(date)
 	color.Set(color.FgYellow)
