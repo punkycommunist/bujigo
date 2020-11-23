@@ -24,19 +24,20 @@ func StartBujiSequence() {
 	in := bufio.NewReader(os.Stdin)
 	var values [5]string
 	values[0] = time.Now().Format("02/01/2006")
-	values[1] = time.Now().Format("15")
+	values[4] = time.Now().Format("15")
 	minutes := time.Now().Format("4")
+	//from string to int to apply logic
 	i, err := strconv.Atoi(minutes)
 	if err != nil {
 		log.Fatal(err)
 	}
 	if i >= 30 {
-		t, err := strconv.Atoi(values[1])
+		t, err := strconv.Atoi(values[4])
 		if err != nil {
 			log.Fatal(err)
 		}
 		t++
-		values[1] = strconv.Itoa(t)
+		values[4] = strconv.Itoa(t)
 	}
 	fmt.Println("Quantita': ")
 	values[1], err = in.ReadString('\n')
@@ -47,7 +48,7 @@ func StartBujiSequence() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	for i := 1; i < len(values); i++ {
+	for i := 1; i < len(values)-1; i++ {
 		values[i] = values[i][0 : len(values[i])-1]
 	}
 	s := "\n" + values[0] + "," + values[1] + "," + values[2] + "," + values[3] + "," + values[4] + ","
