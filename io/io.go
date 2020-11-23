@@ -71,12 +71,7 @@ func StartBujiSequence() {
 	fmt.Scan(&values[2])
 	fmt.Println("Utilizzo: ")
 	fmt.Scan(&values[3])
-	if err != nil {
-		log.Fatal(err)
-	}
-	for i := 1; i < len(values)-1; i++ {
-		values[i] = values[i][0 : len(values[i])-1]
-	}
+
 	s := "\n" + values[0] + "," + values[1] + "," + values[2] + "," + values[3] + "," + values[4] + ","
 	f.WriteString(s)
 }
