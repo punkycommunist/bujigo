@@ -1,24 +1,5 @@
 package menu
 
-/*
-github.com/fatih/color
-# Plug into existing code
-
-// Use handy standard colors
-color.Set(color.FgYellow)
-
-fmt.Println("Existing text will now be in yellow")
-fmt.Printf("This one %s\n", "too")
-
-color.Unset() // Don't forget to unset
-
-// You can mix up parameters
-color.Set(color.FgMagenta, color.Bold)
-defer color.Unset() // Use it in your function
-
-fmt.Println("All text will now be bold magenta.")
-*/
-
 import (
 	"fmt"
 
