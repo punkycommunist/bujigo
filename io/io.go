@@ -1,7 +1,6 @@
 package io
 
 import (
-	"bufio"
 	"encoding/csv"
 	"fmt"
 	"log"
@@ -21,30 +20,57 @@ func StartBujiSequence() {
 	}
 	defer f.Close()
 
-	in := bufio.NewReader(os.Stdin)
 	var values [5]string
-	values[0] = time.Now().Format("02/01/2006")
-	values[4] = time.Now().Format("15")
-	minutes := time.Now().Format("4")
-	//from string to int to apply logic
-	i, err := strconv.Atoi(minutes)
+	var isToday string
+	fmt.Println("Il buji e' stato fumato oggi? [y] per si, [n] per no e inserire la data.")
+	fmt.Scan(&isToday)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if i >= 30 {
-		t, err := strconv.Atoi(values[4])
+	if isToday == "y" { //if [enter] gets pressed
+		values[0] = time.Now().Format("02/01/2006")
+	} else if isToday == "n" {
+		fmt.Println("Che giorno era?")
+		fmt.Scan(&values[0])
+	} else { //if invalid character
+		log.Fatal(isToday + " invalid.")
+	}
+
+	var thisHour string
+	fmt.Println("Il buji e' stato fumato a quest'ora? [y] per si, [n] per no e inserire la data.")
+	fmt.Scan(&thisHour)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if thisHour == "y" { //if [y] gets pressed
+		values[4] = time.Now().Format("15")
+		minutes := time.Now().Format("4")
+		//from string to int to apply logic
+		i, err := strconv.Atoi(minutes)
 		if err != nil {
 			log.Fatal(err)
 		}
-		t++
-		values[4] = strconv.Itoa(t)
+		if i >= 30 {
+			fmt.Println("run")
+			t, err := strconv.Atoi(values[4])
+			if err != nil {
+				log.Fatal(err)
+			}
+			t++
+			values[4] = strconv.Itoa(t)
+		}
+	} else if thisHour == "n" {
+		fmt.Println("Che ore erano?")
+		fmt.Scan(&values[4])
+	} else { //if invalid character
+		log.Fatal(thisHour + " invalid.")
 	}
 	fmt.Println("Quantita': ")
-	values[1], err = in.ReadString('\n')
+	fmt.Scan(&values[1])
 	fmt.Println("Qualita': ")
-	values[2], err = in.ReadString('\n')
+	fmt.Scan(&values[2])
 	fmt.Println("Utilizzo: ")
-	values[3], err = in.ReadString('\n')
+	fmt.Scan(&values[3])
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -50,7 +50,7 @@ func main() {
 			remains:  line[5],
 		}
 		iDate = append(iDate, data.date)
-		if data.quantity != "quantita" { //skippa prima riga, metti 0 per tenere con gli altri index
+		if data.quantity != "quantita" { //skippa prima riga
 			q, err := strconv.ParseFloat(data.quantity, 64)
 			if err != nil {
 				log.Println(err)
@@ -62,7 +62,7 @@ func main() {
 
 		iQuality = append(iQuality, data.quality)
 		iMethod = append(iMethod, data.method)
-		if data.hour != "ore" { //skippa prima riga, metti 0 per tenere con gli altri index
+		if data.hour != "ore" { //skippa prima riga
 			h, err := strconv.ParseInt(data.hour, 10, 32)
 			if err != nil {
 				log.Println(err)
