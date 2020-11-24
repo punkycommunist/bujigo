@@ -38,7 +38,6 @@ func ReadJSONPreferences() JSONPreferences {
 	// we unmarshal our byteArray which contains our
 	// jsonFile's content into 'users' which we defined above
 	json.Unmarshal(byteValue, &JSONPreferences)
-	fmt.Println(JSONPreferences.QRemains.Worst)
 	jsonFile.Close()
 	return JSONPreferences
 }
