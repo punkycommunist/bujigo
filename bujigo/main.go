@@ -40,7 +40,7 @@ func main() {
 	var iQuantity []float64
 	var iQuality []string
 	var iMethod []string
-	var iHour []int32
+	var iHour []int
 	var iRemains float64
 	// Loop through lines & turn into object
 	for _, line := range lines {
@@ -70,7 +70,7 @@ func main() {
 			if err != nil {
 				log.Println(err)
 			}
-			iHour = append(iHour, int32(h))
+			iHour = append(iHour, int(h))
 		} else {
 			iHour = append(iHour, 0)
 		}

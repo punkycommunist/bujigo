@@ -1,15 +1,54 @@
 package io
 
 import (
+	"bufio"
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 )
+
+//JSONPreferences is the struct representing the settings.json file
+type JSONPreferences struct {
+	QDayAverage struct {
+		Worst float64 `json:"worst"`
+		Best  float64 `json:"best"`
+	} `json:"QDayAverage"`
+	QRemains struct {
+		Worst float64 `json:"worst"`
+		Best  float64 `json:"best"`
+	} `json:"QRemains"`
+}
+
+//ReadJSONPreferences reads from the settings.json file in the directory of the program
+func ReadJSONPreferences() JSONPreferences {
+	var JSONPreferences JSONPreferences
+	jsonFile, err := os.Open("settings.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	// read our opened jsonFile as a byte array.
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+	// we unmarshal our byteArray which contains our
+	// jsonFile's content into 'users' which we defined above
+	json.Unmarshal(byteValue, &JSONPreferences)
+	fmt.Println(JSONPreferences.QRemains.Worst)
+	jsonFile.Close()
+	return JSONPreferences
+}
+
+//WriteJSONPreferences x
+func WriteJSONPreferences(JSONPreferences JSONPreferences) {
+	file, _ := json.MarshalIndent(JSONPreferences, "", " ")
+
+	_ = ioutil.WriteFile("settings.json", file, 0644)
+}
 
 //StartBujiSequence initializes the process to add another buji in the database
 func StartBujiSequence() {
@@ -19,7 +58,8 @@ func StartBujiSequence() {
 		log.Fatal(err)
 	}
 	defer f.Close()
-
+	//initialize bufio consoleReader
+	consoleReader := bufio.NewReader(os.Stdin)
 	var values [5]string
 	var isToday string
 	prompt("Il buji e' stato fumato oggi? [y] per si, [n] per no e inserire la data.")
@@ -65,24 +105,25 @@ func StartBujiSequence() {
 		log.Fatal(thisHour + " invalid.")
 	}
 	prompt("Quantita': ")
-	fmt.Scan(&values[1])
+	values[1], err = consoleReader.ReadString('\n')
 	prompt("Qualita': ")
-	fmt.Scan(&values[2])
+	values[2], err = consoleReader.ReadString('\n')
 	prompt("Utilizzo: ")
-	fmt.Scan(&values[3])
-
+	values[3], err = consoleReader.ReadString('\n')
+	if err != nil {
+		log.Fatal(err)
+	}
+	//removing the newline char from consoleReader.ReadString
+	for i := 1; i <= 3; i++ {
+		values[i] = strings.TrimSuffix(values[i], "\n")
+	}
 	s := "\n" + values[0] + "," + values[1] + "," + values[2] + "," + values[3] + "," + values[4] + ","
 	f.WriteString(s)
 }
 
 //SearchCsvInCurrentDirectory searches .csv files by getting an array of the elements present in that directory
 func SearchCsvInCurrentDirectory() string {
-	out, err := exec.Command("pwd").Output()
-	if err != nil {
-		log.Fatal(err)
-	}
-	out = out[:len(out)-1]
-	files, err := filepath.Glob(string(out) + "/*")
+	files, err := filepath.Glob("*")
 	if err != nil {
 		log.Fatal(err)
 	}
