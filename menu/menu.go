@@ -20,12 +20,30 @@ func PrintMenu(c i.CsvFile) {
 	color.Unset()
 	fmt.Println("Buji fumati: " + fmt.Sprint(smokedBuji))
 	fmt.Println("Media quantita' materiale: " + sRounded)
-	fmt.Print("Media buji al giorno: ")
-	fmt.Println(fmt.Sprintf("%.2f", s.BujiNumber(c.Date)/s.TotalDaysElapsed(c.Date, c.Hour)))
+	//QAvgBujiSmokedADay
+	t := jsp.QAvgBujiSmokedADay
+	switch v := s.BujiNumber(c.Date) / s.TotalDaysElapsed(c.Date, c.Hour); {
+	case v >= t.Best:
+		color.Set(color.FgRed)
+		fmt.Println("Media buji al giorno: " + fmt.Sprintf("%.2f", s.BujiNumber(c.Date)/s.TotalDaysElapsed(c.Date, c.Hour)))
+		color.Unset()
+		break
+	case v >= t.Worst && v < t.Best:
+		color.Set(color.FgYellow)
+		fmt.Println("Media buji al giorno: " + fmt.Sprintf("%.2f", s.BujiNumber(c.Date)/s.TotalDaysElapsed(c.Date, c.Hour)))
+		color.Unset()
+		break
+	case v <= t.Worst:
+		color.Set(color.FgGreen)
+		fmt.Println("Media buji al giorno: " + fmt.Sprintf("%.2f", s.BujiNumber(c.Date)/s.TotalDaysElapsed(c.Date, c.Hour)))
+		color.Unset()
+		break
+	}
+	//BestHour
 	fmt.Print("Ora piu' frequente: ")
 	fmt.Println(s.BestHour(c.Hour))
 	//DailyAvgQty
-	t := jsp.QDayAverage
+	t = jsp.QDayAverage
 	switch v := s.DailyAvgQty(c.Date, c.Quantity, c.Hour); {
 	case v >= t.Best:
 		color.Set(color.FgRed)
@@ -107,7 +125,6 @@ func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile) {
 		fmt.Println("[s] Mostra gli ultimi buji!")
 		fmt.Println("[c] Per calcolare i giorni rimanenti fumando una certa quantita' al giorno.")
 		fmt.Println("[h] Quanto devo fumare per farmi durare il materiale per un numero personalizzato di giorni?")
-		fmt.Println("[help]")
 		prompt("[d] Per mostrare le preferenze dei colori!")
 		fmt.Scanf("%s", &selection)
 		switch selection {
