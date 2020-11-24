@@ -1,10 +1,19 @@
 {
-    "QDayAverage": {
-      "worst": 0.55,
-      "best": 0.45
-    },
-    "QRemains": {
-      "worst": 1.0,
-      "best": 5.0
-    }
+	"QDayAverage": {
+	  "worst": 0.55,
+	  "best": 0.45
+	},
+	"QRemains": {
+	  "worst": 1.0,
+	  "best": 5.0
+	},
+	"QRemainingDays": {
+	  "worst": 3.0,
+	  "best": 7.0
+  },
+  "QAvgBujiSmokedADay": {
+	  "worst": 3.0,
+	  "best": 5.0
+  }
+  
   }

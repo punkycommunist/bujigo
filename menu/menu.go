@@ -9,46 +9,97 @@ import (
 )
 
 //PrintMenu is a general stats printout
-func PrintMenu(date []string, quantity []float64, quality []string, method []string, hour []int, remains float64) {
+func PrintMenu(c i.CsvFile) {
 	jsp := i.ReadJSONPreferences()
-	timeInterval := date[1] + " - " + date[len(date)-1]
-	rounded := s.RoundedAvgQuantity(quantity, date, hour)
+	timeInterval := c.Date[1] + " - " + c.Date[len(c.Date)-1]
+	rounded := s.RoundedAvgQuantity(c.Quantity, c.Date, c.Hour)
 	sRounded := fmt.Sprintf("%.2f", rounded)
-	smokedBuji := s.BujiNumber(date)
+	smokedBuji := s.BujiNumber(c.Date)
 	color.Set(color.FgYellow)
 	fmt.Printf("Intervallo " + timeInterval + "\n")
 	color.Unset()
 	fmt.Println("Buji fumati: " + fmt.Sprint(smokedBuji))
 	fmt.Println("Media quantita' materiale: " + sRounded)
 	fmt.Print("Media buji al giorno: ")
-	fmt.Println(fmt.Sprintf("%.2f", s.BujiNumber(date)/s.TotalDaysElapsed(date, hour)))
+	fmt.Println(fmt.Sprintf("%.2f", s.BujiNumber(c.Date)/s.TotalDaysElapsed(c.Date, c.Hour)))
 	fmt.Print("Ora piu' frequente: ")
-	fmt.Println(s.BestHour(hour))
-	fmt.Println("Quantita' media al giorno: " + fmt.Sprintf("%.2f", s.DailyAvgQty(date, quantity, hour)))
-	if s.RemainingDaysAtRate(date, quantity, hour, remains) >= 2.0 {
-		color.Set(color.FgGreen)
-		fmt.Println("Giorni rimasti a questo regime: " + fmt.Sprintf("%.2f", s.RemainingDaysAtRate(date, quantity, hour, remains)))
+	fmt.Println(s.BestHour(c.Hour))
+	//DailyAvgQty
+	t := jsp.QDayAverage
+	switch v := s.DailyAvgQty(c.Date, c.Quantity, c.Hour); {
+	case v >= t.Best:
+		color.Set(color.FgRed)
+		fmt.Println("Quantita' media al giorno: " + fmt.Sprintf("%.2f", s.DailyAvgQty(c.Date, c.Quantity, c.Hour)))
 		color.Unset()
+		break
+	case v >= t.Worst && v < t.Best:
+		color.Set(color.FgYellow)
+		fmt.Println("Quantita' media al giorno: " + fmt.Sprintf("%.2f", s.DailyAvgQty(c.Date, c.Quantity, c.Hour)))
+		color.Unset()
+		break
+	case v <= t.Worst:
+		color.Set(color.FgGreen)
+		fmt.Println("Quantita' media al giorno: " + fmt.Sprintf("%.2f", s.DailyAvgQty(c.Date, c.Quantity, c.Hour)))
+		color.Unset()
+		break
 	}
-	fmt.Println("Quantita' rimasta da fumare: " + fmt.Sprintf("%.2f", remains))
+	//RemainingDaysAtRate
+	t = jsp.QRemaininingDays
+	switch v := s.RemainingDaysAtRate(c.Date, c.Quantity, c.Hour, c.Remains); {
+	case v >= t.Best:
+		color.Set(color.FgGreen)
+		fmt.Println("Giorni rimasti a questo regime: " + fmt.Sprintf("%.2f", s.RemainingDaysAtRate(c.Date, c.Quantity, c.Hour, c.Remains)))
+		color.Unset()
+		break
+	case v >= t.Worst && v < t.Best:
+		color.Set(color.FgYellow)
+		fmt.Println("Giorni rimasti a questo regime: " + fmt.Sprintf("%.2f", s.RemainingDaysAtRate(c.Date, c.Quantity, c.Hour, c.Remains)))
+		color.Unset()
+		break
+	case v <= t.Worst:
+		color.Set(color.FgRed)
+		fmt.Println("Giorni rimasti a questo regime: " + fmt.Sprintf("%.2f", s.RemainingDaysAtRate(c.Date, c.Quantity, c.Hour, c.Remains)))
+		color.Unset()
+		break
+	}
+	//Remains
+	t = jsp.QRemains
+	switch v := c.Remains; {
+	case v >= t.Best:
+		color.Set(color.FgGreen)
+		fmt.Println("Quantita' rimasta da fumare: " + fmt.Sprintf("%.2f", c.Remains))
+		color.Unset()
+		break
+	case v >= t.Worst && v < t.Best:
+		color.Set(color.FgYellow)
+		fmt.Println("Quantita' rimasta da fumare: " + fmt.Sprintf("%.2f", c.Remains))
+		color.Unset()
+		break
+	case v <= t.Worst:
+		color.Set(color.FgRed)
+		fmt.Println("Quantita' rimasta da fumare: " + fmt.Sprintf("%.2f", c.Remains))
+		color.Unset()
+		break
+	}
+	//fumato oggi printout
 	fmt.Printf("Oggi: [")
 	color.Set(color.FgYellow)
-	fmt.Printf("%.2f", s.SmokedToday(date, quantity, hour))
+	fmt.Printf("%.2f", s.SmokedToday(c.Date, c.Quantity, c.Hour))
 	color.Unset()
 	fmt.Printf("/")
 	color.Set(color.FgRed)
-	fmt.Printf("%.2f", s.DailyAvgQty(date, quantity, hour))
+	fmt.Printf("%.2f", s.DailyAvgQty(c.Date, c.Quantity, c.Hour))
 	color.Unset()
 	fmt.Printf("] Rimanenti: [")
 	color.Set(color.FgGreen)
-	fmt.Printf("%.2f", s.DailyAvgQty(date, quantity, hour)-s.SmokedToday(date, quantity, hour))
+	fmt.Printf("%.2f", s.DailyAvgQty(c.Date, c.Quantity, c.Hour)-s.SmokedToday(c.Date, c.Quantity, c.Hour))
 	color.Unset()
 	fmt.Printf("]")
-	SpecialFunctions(jsp, date, quantity, quality, method, hour, remains)
+	SpecialFunctions(jsp, c)
 }
 
 //SpecialFunctions is a menu with a for loop that operates "special functions"
-func SpecialFunctions(jsp i.JSONPreferences, date []string, quantity []float64, quality []string, method []string, hour []int, remains float64) {
+func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile) {
 	var selection string
 	color.Green("\n\nFunzioni speciali!")
 	for selection != "q" {
@@ -71,21 +122,21 @@ func SpecialFunctions(jsp i.JSONPreferences, date []string, quantity []float64, 
 			var n int
 			prompt("Quanti ultimi buji?")
 			fmt.Scan(&n)
-			s.ShowLastBujis(date, quantity, quality, method, hour, remains, n)
+			s.ShowLastBujis(c.Date, c.Quantity, c.Quality, c.Method, c.Hour, c.Remains, n)
 			break
 
 		case "c":
 			quantitaAlGiorno := 0.0
 			prompt("Quale sarebbe la quantita' al giorno?")
 			fmt.Scan(&quantitaAlGiorno)
-			s.HowManyDaysWithCustom(quantity, remains, quantitaAlGiorno)
+			s.HowManyDaysWithCustom(c.Quantity, c.Remains, quantitaAlGiorno)
 			break
 
 		case "h":
 			giorni := 0.0
 			prompt("Di quanti giorni stiamo parlando?")
 			fmt.Scan(&giorni)
-			s.HowMuchQuantityWithCustomDays(quantity, remains, giorni)
+			s.HowMuchQuantityWithCustomDays(c.Quantity, c.Remains, giorni)
 			break
 
 		default:

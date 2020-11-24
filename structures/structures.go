@@ -26,19 +26,31 @@ func BujiNumber(dates []string) float64 {
 
 //TotalDaysElapsed returns how many days have passed from the start to the end of records
 func TotalDaysElapsed(date []string, hour []int) float64 {
-	l := len(date) - 1
 	fDay, err := strconv.Atoi(date[1][0:2])
 	fMonth, err := strconv.Atoi(date[1][3:5])
 	fYear, err := strconv.Atoi(date[1][6:10])
-	lDay, err := strconv.Atoi(date[l][0:2])
-	lMonth, err := strconv.Atoi(date[l][3:5])
-	lYear, err := strconv.Atoi(date[l][6:10])
+	// l := len(date) - 1
+	// lDay, err := strconv.Atoi(date[l][0:2]) --> days counting until last report <--
+	// lMonth, err := strconv.Atoi(date[l][3:5])
+	// lYear, err := strconv.Atoi(date[l][6:10])
+	// t2 := time.Date(lYear, time.Month(lMonth), lDay, int(hour[l]), 0, 0, 0, time.UTC)
+	nowYear, err := strconv.Atoi(time.Now().Format("2006"))
+	nowMonth, err := strconv.Atoi(time.Now().Format("01"))
+	nowDay, err := strconv.Atoi(time.Now().Format("02"))
+	nowHour, err := strconv.Atoi(time.Now().Format("15"))
+	nowMinute, err := strconv.Atoi(time.Now().Format("4"))
+	nowSecond, err := strconv.Atoi(time.Now().Format("5"))
+	t, err := TimeIn(time.Now(), "Europe/Rome")
+	if err != nil {
+		log.Fatal("Europe/Rome", "<time unknown>")
+	}
+	t2 := time.Date(nowYear, time.Month(nowMonth), nowDay, nowHour, nowMinute, nowSecond, 0, t.Location())
 	if err != nil {
 		log.Println(err)
 	}
-	t1 := time.Date(fYear, time.Month(fMonth), fDay, int(hour[1]), 0, 0, 0, time.UTC)
-	t2 := time.Date(lYear, time.Month(lMonth), lDay, int(hour[l]), 0, 0, 0, time.UTC)
+	t1 := time.Date(fYear, time.Month(fMonth), fDay, int(hour[1]), 0, 0, 0, t.Location())
 	days := t2.Sub(t1).Hours() / 24.0
+	fmt.Println(t2)
 	return days
 }
 
@@ -126,4 +138,16 @@ func SmokedToday(date []string, quantity []float64, hour []int) float64 {
 func prompt(s string) {
 	fmt.Println(s)
 	fmt.Printf("$ ")
+}
+
+// TimeIn returns the time in UTC if the name is "" or "UTC".
+// It returns the local time if the name is "Local".
+// Otherwise, the name is taken to be a location name in
+// the IANA Time Zone database, such as "Africa/Lagos".
+func TimeIn(t time.Time, name string) (time.Time, error) {
+	loc, err := time.LoadLocation(name)
+	if err == nil {
+		t = t.In(loc)
+	}
+	return t, err
 }

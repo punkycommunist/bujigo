@@ -14,6 +14,41 @@ import (
 	"time"
 )
 
+const defaultSettings string = `{
+	"QDayAverage": {
+	  "worst": 0.55,
+	  "best": 0.45
+	},
+	"QRemains": {
+	  "worst": 1.0,
+	  "best": 5.0
+	},
+	"QRemainingDays": {
+	  "worst": 3.0,
+	  "best": 7.0
+	}
+  }`
+
+//CsvLine is a struct for one horizontal line in csv
+type CsvLine struct {
+	Date     string
+	Quantity string
+	Quality  string
+	Method   string
+	Hour     string
+	Remains  string
+}
+
+//CsvFile represents the loaded .csv file
+type CsvFile struct {
+	Date     []string
+	Quantity []float64
+	Quality  []string
+	Method   []string
+	Hour     []int
+	Remains  float64
+}
+
 //JSONPreferences is the struct representing the settings.json file
 type JSONPreferences struct {
 	QDayAverage struct {
@@ -24,22 +59,46 @@ type JSONPreferences struct {
 		Worst float64 `json:"worst"`
 		Best  float64 `json:"best"`
 	} `json:"QRemains"`
+	QRemaininingDays struct {
+		Worst float64 `json:"worst"`
+		Best  float64 `json:"best"`
+	} `json:"QRemainingDays"`
+	QAvgBujiSmokedADay struct {
+		Worst float64 `json:"worst"`
+		Best  float64 `json:"best"`
+	} `json:"QAvgBujiSmokedADay"`
 }
 
 //ReadJSONPreferences reads from the settings.json file in the directory of the program
 func ReadJSONPreferences() JSONPreferences {
 	var JSONPreferences JSONPreferences
-	jsonFile, err := os.Open("settings.json")
+	files, err := filepath.Glob("*")
 	if err != nil {
 		log.Fatal(err)
 	}
-	// read our opened jsonFile as a byte array.
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-	// we unmarshal our byteArray which contains our
-	// jsonFile's content into 'users' which we defined above
-	json.Unmarshal(byteValue, &JSONPreferences)
-	jsonFile.Close()
-	return JSONPreferences
+	for i := 0; i < len(files); i++ {
+		if files[i] == "settings.json" {
+			jsonFile, err := os.Open("settings.json")
+			if err != nil {
+				log.Fatal(err)
+			}
+			// read our opened jsonFile as a byte array.
+			byteValue, _ := ioutil.ReadAll(jsonFile)
+			// we unmarshal our byteArray which contains our
+			// jsonFile's content into 'users' which we defined above
+			json.Unmarshal(byteValue, &JSONPreferences)
+			jsonFile.Close()
+			return JSONPreferences
+		}
+	}
+	prompt("settings.json non trovato. creare il default ora? [Enter] per si")
+	fmt.Scanln()
+	f, err := os.OpenFile("settings.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	f.WriteString(defaultSettings)
+	return ReadJSONPreferences()
 }
 
 //WriteJSONPreferences x

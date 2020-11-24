@@ -20,72 +20,57 @@ import (
 	m "github.com/punkycommunist/bujigo/menu"
 )
 
-//CsvLine is a struct for one horizontal line in csv
-type CsvLine struct {
-	date     string
-	quantity string
-	quality  string
-	method   string
-	hour     string
-	remains  string
-}
-
 func main() {
 	fileName := i.SearchCsvInCurrentDirectory()
 	lines, err := i.ReadCsv(fileName)
 	if err != nil {
 		panic(err)
 	}
-	var iDate []string
-	var iQuantity []float64
-	var iQuality []string
-	var iMethod []string
-	var iHour []int
-	var iRemains float64
+	var c i.CsvFile
 	// Loop through lines & turn into object
 	for _, line := range lines {
-		data := CsvLine{
-			date:     line[0],
-			quantity: line[1],
-			quality:  line[2],
-			method:   line[3],
-			hour:     line[4],
-			remains:  line[5],
+		data := i.CsvLine{
+			Date:     line[0],
+			Quantity: line[1],
+			Quality:  line[2],
+			Method:   line[3],
+			Hour:     line[4],
+			Remains:  line[5],
 		}
-		iDate = append(iDate, data.date)
-		if data.quantity != "quantita" { //skippa prima riga
-			q, err := strconv.ParseFloat(data.quantity, 64)
+		c.Date = append(c.Date, data.Date)
+		if data.Quantity != "quantita" { //skippa prima riga
+			q, err := strconv.ParseFloat(data.Quantity, 64)
 			if err != nil {
 				log.Println(err)
 			}
-			iQuantity = append(iQuantity, q)
+			c.Quantity = append(c.Quantity, q)
 		} else {
-			iQuantity = append(iQuantity, 0.0)
+			c.Quantity = append(c.Quantity, 0.0)
 		}
 
-		iQuality = append(iQuality, data.quality)
-		iMethod = append(iMethod, data.method)
-		if data.hour != "ore" { //skippa prima riga
-			h, err := strconv.ParseInt(data.hour, 10, 32)
+		c.Quality = append(c.Quality, data.Quality)
+		c.Method = append(c.Method, data.Method)
+		if data.Hour != "ore" { //skippa prima riga
+			h, err := strconv.ParseInt(data.Hour, 10, 32)
 			if err != nil {
 				log.Println(err)
 			}
-			iHour = append(iHour, int(h))
+			c.Hour = append(c.Hour, int(h))
 		} else {
-			iHour = append(iHour, 0)
+			c.Hour = append(c.Hour, 0)
 		}
-		if data.remains != "" {
-			r, err := strconv.ParseFloat(data.remains, 64)
+		if data.Remains != "" {
+			r, err := strconv.ParseFloat(data.Remains, 64)
 			if err != nil {
 				log.Println(err)
 			}
-			iRemains = r
+			c.Remains = r
 		}
 	}
 	weightSmoked := 0.0
-	for i := 1; i < len(iQuantity); i++ {
-		weightSmoked += iQuantity[i]
+	for i := 1; i < len(c.Quantity); i++ {
+		weightSmoked += c.Quantity[i]
 	}
-	iRemains -= weightSmoked
-	m.PrintMenu(iDate, iQuantity, iQuality, iMethod, iHour, iRemains)
+	c.Remains -= weightSmoked
+	m.PrintMenu(c)
 }
