@@ -13,14 +13,11 @@ import (
 func PrintMenu(c i.CsvFile) {
 	jsp := i.ReadJSONPreferences()
 	timeInterval := c.Date[1] + " - " + c.Date[len(c.Date)-1]
-	rounded := s.RoundedAvgQuantity(c.Quantity, c.Date, c.Hour)
-	sRounded := fmt.Sprintf("%.2f", rounded)
-	smokedBuji := s.BujiNumber(c.Date)
 	color.Set(color.FgYellow)
 	fmt.Printf("Intervallo " + timeInterval + "\n")
 	color.Unset()
-	fmt.Println("Buji fumati: " + fmt.Sprint(smokedBuji))
-	fmt.Println("Media quantita' materiale: " + sRounded)
+	fmt.Println("Buji fumati: " + fmt.Sprint(s.BujiNumber(c.Date)))
+	fmt.Println("Media quantita' materiale: " + fmt.Sprintf("%.2f", s.RoundedAvgQuantity(c.Quantity, c.Date, c.Hour)))
 	//QAvgBujiSmokedADay
 	t := jsp.QAvgBujiSmokedADay
 	switch v := s.BujiNumber(c.Date) / s.TotalDaysElapsed(c.Date, c.Hour); {
