@@ -152,7 +152,7 @@ func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile) {
 		case "c":
 			quantitaAlGiorno := 0.0
 			prompt("Quale sarebbe la quantita' al giorno?")
-			n, err = fmt.Scan("%f\n", &quantitaAlGiorno)
+			n, err = fmt.Scanf("%f\n", &quantitaAlGiorno)
 			if err != nil || n != 1 {
 				log.Fatal(err)
 			}
