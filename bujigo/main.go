@@ -5,29 +5,35 @@ DATA,QUANTITA',QUALITA',METODO,ORE
 TODO:
 Calculate over how many days i smoked the last x weight
 Calculate how much i smoked on the last x day
-Consider day passed not as interval subtraction and as an integer but as a float64
 Update tools
 Optional PGP Encryption
+Work on quality
 */
 
 package main
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 
+	c "github.com/fatih/color"
 	i "github.com/punkycommunist/bujigo/io"
 	m "github.com/punkycommunist/bujigo/menu"
 )
 
+const version string = "1.1"
+
 func main() {
+	c.Set(c.FgHiBlue)
+	fmt.Println("[v] " + version)
+	c.Unset()
 	fileName := i.SearchCsvInCurrentDirectory()
 	lines, err := i.ReadCsv(fileName)
 	if err != nil {
 		panic(err)
 	}
 	var c i.CsvFile
-	// Loop through lines & turn into object
 	for _, line := range lines {
 		data := i.CsvLine{
 			Date:     line[0],

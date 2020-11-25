@@ -119,7 +119,7 @@ func ShowLastBujis(date []string, quantity []float64, quality []string, method [
 	}
 }
 
-// SmokedToday returns [0]: how much you smoked today [1]: the average quantity you smoke a day [2]: how much you have left
+// SmokedToday returns how much you smoked today
 func SmokedToday(date []string, quantity []float64, hour []int) float64 {
 	csvLastCellIndex := len(date) - 1
 	now := time.Now()
@@ -134,6 +134,7 @@ func SmokedToday(date []string, quantity []float64, hour []int) float64 {
 	}
 	return smokedToday
 }
+
 func prompt(s string) {
 	fmt.Println(s)
 	fmt.Printf("$ ")
