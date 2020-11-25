@@ -1,7 +1,6 @@
 package io
 
 import (
-	"bufio"
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
@@ -91,8 +90,12 @@ func ReadJSONPreferences() JSONPreferences {
 			return JSONPreferences
 		}
 	}
-	prompt("settings.json non trovato. creare il default ora? [Enter] per si")
-	fmt.Scanln()
+	var progress string
+	prompt("settings.json non trovato. creare il default ora? [y] per si")
+	n, err1 := fmt.Scanf("%s\n", &progress)
+	if err1 != nil || n != 1 {
+		log.Fatal(err1)
+	}
 	f, err := os.OpenFile("settings.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
@@ -116,28 +119,29 @@ func StartBujiSequence() {
 		log.Fatal(err)
 	}
 	defer f.Close()
-	//initialize bufio consoleReader
-	consoleReader := bufio.NewReader(os.Stdin)
 	var values [5]string
 	var isToday string
 	prompt("Il buji e' stato fumato oggi? [y] per si, [n] per no e inserire la data.")
-	fmt.Scan(&isToday)
-	if err != nil {
+	n, err := fmt.Scanf("%s\n", &isToday)
+	if err != nil || n != 1 {
 		log.Fatal(err)
 	}
-	if isToday == "y" { //if [enter] gets pressed
+	if isToday == "y" { //if [y] gets pressed
 		values[0] = time.Now().Format("02/01/2006")
 	} else if isToday == "n" {
 		prompt("Che giorno era?")
-		fmt.Scan(&values[0])
+		n, err := fmt.Scanf("%s\n", &values[0])
+		if err != nil || n != 1 {
+			log.Fatal(err)
+		}
 	} else { //if invalid character
 		log.Fatal(isToday + " invalid.")
 	}
 
 	var thisHour string
 	prompt("Il buji e' stato fumato a quest'ora? [y] per si, [n] per no e inserire la data.")
-	fmt.Scan(&thisHour)
-	if err != nil {
+	n, err = fmt.Scanf("%s\n", &thisHour)
+	if err != nil || n != 1 {
 		log.Fatal(err)
 	}
 	if thisHour == "y" { //if [y] gets pressed
@@ -158,17 +162,26 @@ func StartBujiSequence() {
 		}
 	} else if thisHour == "n" {
 		prompt("Che ore erano?")
-		fmt.Scan(&values[4])
+		n, err = fmt.Scanf("%s\n", &values[4])
+		if err != nil || n != 1 {
+			log.Fatal(err)
+		}
 	} else { //if invalid character
 		log.Fatal(thisHour + " invalid.")
 	}
 	prompt("Quantita': ")
-	values[1], err = consoleReader.ReadString('\n')
+	n, err = fmt.Scanf("%s\n", &values[1])
+	if err != nil || n != 1 {
+		log.Fatal(err)
+	}
 	prompt("Qualita': ")
-	values[2], err = consoleReader.ReadString('\n')
+	n, err = fmt.Scanf("%s\n", &values[2])
+	if err != nil || n != 1 {
+		log.Fatal(err)
+	}
 	prompt("Utilizzo: ")
-	values[3], err = consoleReader.ReadString('\n')
-	if err != nil {
+	n, err = fmt.Scanf("%s\n", &values[3])
+	if err != nil || n != 1 {
 		log.Fatal(err)
 	}
 	//removing the newline char from consoleReader.ReadString
@@ -181,9 +194,9 @@ func StartBujiSequence() {
 
 //SearchCsvInCurrentDirectory searches .csv files by getting an array of the elements present in that directory
 func SearchCsvInCurrentDirectory() string {
-	files, err := filepath.Glob("*")
-	if err != nil {
-		log.Fatal(err)
+	files, fileErr := filepath.Glob("*")
+	if fileErr != nil {
+		log.Fatal(fileErr)
 	}
 	for i := 0; i < len(files); i++ {
 		if files[i][len(files[i])-4:] == ".csv" {
@@ -193,12 +206,18 @@ func SearchCsvInCurrentDirectory() string {
 	log.Println("No .csv file found. Do you want to create the default [buji.csv]?")
 	material := 0.0
 	prompt("How much material do you have to smoke? (1g = 1.0): ")
-	fmt.Scanf("%f", &material)
+	n, err := fmt.Scanf("%f\n", &material)
+	if err != nil || n != 1 {
+		log.Fatal(err)
+	}
 	f, err := os.OpenFile("buji.csv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
-	f.WriteString("giorno,quantita,qualita,tipo,ore," + fmt.Sprintf("%.2f", material))
+	_, err = f.WriteString("giorno,quantita,qualita,tipo,ore," + fmt.Sprintf("%.2f", material))
+	if err != nil {
+		log.Fatal(err)
+	}
 	prompt("You have also to enter a buji to start. Press Enter.")
 	fmt.Scanln()
 	StartBujiSequence()

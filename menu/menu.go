@@ -2,6 +2,7 @@ package menu
 
 import (
 	"fmt"
+	"log"
 
 	color "github.com/fatih/color"
 	i "github.com/punkycommunist/bujigo/io"
@@ -125,8 +126,11 @@ func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile) {
 		fmt.Println("[s] Mostra gli ultimi buji!")
 		fmt.Println("[c] Per calcolare i giorni rimanenti fumando una certa quantita' al giorno.")
 		fmt.Println("[h] Quanto devo fumare per farmi durare il materiale per un numero personalizzato di giorni?")
-		prompt("[d] Per mostrare le preferenze dei colori!")
-		fmt.Scanf("%s", &selection)
+		prompt("[q] Per uscire!")
+		n, err := fmt.Scanf("%s\n", &selection)
+		if err != nil || n != 1 {
+			log.Fatal(err)
+		}
 		switch selection {
 		case "d":
 			showColorPreferences(jsp)
@@ -138,21 +142,30 @@ func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile) {
 		case "s":
 			var n int
 			prompt("Quanti ultimi buji?")
-			fmt.Scan(&n)
+			n, err = fmt.Scanf("%d\n", &n)
+			if err != nil || n != 1 {
+				log.Fatal(err)
+			}
 			s.ShowLastBujis(c.Date, c.Quantity, c.Quality, c.Method, c.Hour, c.Remains, n)
 			break
 
 		case "c":
 			quantitaAlGiorno := 0.0
 			prompt("Quale sarebbe la quantita' al giorno?")
-			fmt.Scan(&quantitaAlGiorno)
+			n, err = fmt.Scan("%f\n", &quantitaAlGiorno)
+			if err != nil || n != 1 {
+				log.Fatal(err)
+			}
 			s.HowManyDaysWithCustom(c.Quantity, c.Remains, quantitaAlGiorno)
 			break
 
 		case "h":
 			giorni := 0.0
 			prompt("Di quanti giorni stiamo parlando?")
-			fmt.Scan(&giorni)
+			n, err = fmt.Scanf("%f\n", &giorni)
+			if err != nil || n != 1 {
+				log.Fatal(err)
+			}
 			s.HowMuchQuantityWithCustomDays(c.Quantity, c.Remains, giorni)
 			break
 
