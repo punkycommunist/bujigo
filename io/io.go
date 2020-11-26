@@ -70,7 +70,7 @@ type JSONPreferences struct {
 		Worst float64 `json:"worst"`
 		Best  float64 `json:"best"`
 	} `json:"QRemains"`
-	QRemaininingDays struct {
+	QRemainingDays struct {
 		Worst float64 `json:"worst"`
 		Best  float64 `json:"best"`
 	} `json:"QRemainingDays"`
@@ -83,37 +83,52 @@ type JSONPreferences struct {
 //ReadJSONPreferences reads from the settings.json file in the directory of the program
 func ReadJSONPreferences() JSONPreferences {
 	var JSONPreferences JSONPreferences
-	files, err := filepath.Glob("*")
+	// files, err := filepath.Glob("*")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// for i := 0; i < len(files); i++ {
+	// 	if files[i] == "settings.json" {
+	// 		jsonFile, err := os.Open("settings.json")
+	// 		if err != nil {
+	// 			log.Fatal(err)
+	// 		}
+	// 		// read our opened jsonFile as a byte array.
+	// 		byteValue, _ := ioutil.ReadAll(jsonFile)
+	// 		// we unmarshal our byteArray which contains our
+	// 		// jsonFile's content into 'users' which we defined above
+	// 		json.Unmarshal(byteValue, &JSONPreferences)
+	// 		jsonFile.Close()
+	// 		return JSONPreferences
+	// 	}
+	// }
+	jsonFile, err := os.Open("settings.json")
 	if err != nil {
-		log.Fatal(err)
-	}
-	for i := 0; i < len(files); i++ {
-		if files[i] == "settings.json" {
-			jsonFile, err := os.Open("settings.json")
-			if err != nil {
-				log.Fatal(err)
-			}
-			// read our opened jsonFile as a byte array.
-			byteValue, _ := ioutil.ReadAll(jsonFile)
-			// we unmarshal our byteArray which contains our
-			// jsonFile's content into 'users' which we defined above
-			json.Unmarshal(byteValue, &JSONPreferences)
-			jsonFile.Close()
-			return JSONPreferences
+		var progress string
+		prompt("settings.json non trovato. creare il default ora? [y] per si")
+		n, err1 := fmt.Scanf("%s\n", &progress)
+		if err1 != nil || n != 1 {
+			log.Fatal(err1)
 		}
+		f, err := os.OpenFile("settings.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
+		_, err = f.WriteString(defaultSettings)
+		if err != nil {
+			log.Fatal(err)
+		}
+		jj := ReadJSONPreferences()
+		return jj
 	}
-	var progress string
-	prompt("settings.json non trovato. creare il default ora? [y] per si")
-	n, err1 := fmt.Scanf("%s\n", &progress)
-	if err1 != nil || n != 1 {
-		log.Fatal(err1)
-	}
-	f, err := os.OpenFile("settings.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-	f.WriteString(defaultSettings)
-	return ReadJSONPreferences()
+	// read our opened jsonFile as a byte array.
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+	// we unmarshal our byteArray which contains our
+	// jsonFile's content into 'users' which we defined above
+	json.Unmarshal(byteValue, &JSONPreferences)
+	jsonFile.Close()
+	return JSONPreferences
+
 }
 
 //WriteJSONPreferences x

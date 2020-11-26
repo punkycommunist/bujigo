@@ -63,7 +63,7 @@ func PrintMenu(c i.CsvFile, v string) {
 		break
 	}
 	//RemainingDaysAtRate
-	t = jsp.QRemaininingDays
+	t = jsp.QRemainingDays
 	switch v := s.RemainingDaysAtRate(c.Date, c.Quantity, c.Hour, c.Remains); {
 	case v >= t.Best:
 		color.Set(color.FgGreen)
