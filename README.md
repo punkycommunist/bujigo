@@ -14,4 +14,4 @@ Go gettable with
 go get github.com/punkycommunist/bujigo
 ```
 ### Binaries
-The release has been compiled on an Arch Linux system 64 bit.
+The linux release has been compiled on an Arch Linux system 64 bit.
