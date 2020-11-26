@@ -199,11 +199,12 @@ func SearchCsvInCurrentDirectory() string {
 			return files[i]
 		}
 	}
+	sc := bufio.NewScanner(os.Stdin)
 	log.Println("No .csv file found. Do you want to create the default [buji.csv]?")
-	material := 0.0
 	prompt("How much material do you have to smoke? (1g = 1.0): ")
-	n, err := fmt.Scanf("%f\n", &material)
-	if err != nil || n != 1 {
+	sc.Scan()
+	material, err := strconv.ParseFloat(sc.Text(), 64)
+	if err != nil {
 		log.Fatal(err)
 	}
 	f, err := os.OpenFile("buji.csv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)

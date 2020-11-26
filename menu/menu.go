@@ -1,8 +1,11 @@
 package menu
 
 import (
+	"bufio"
 	"fmt"
 	"log"
+	"os"
+	"strconv"
 
 	color "github.com/fatih/color"
 	i "github.com/punkycommunist/bujigo/io"
@@ -117,6 +120,7 @@ func PrintMenu(c i.CsvFile) {
 //SpecialFunctions is a menu with a for loop that operates "special functions"
 func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile) {
 	var selection string
+	sc := bufio.NewScanner(os.Stdin)
 	color.Green("\n\nFunzioni speciali!")
 	for selection != "q" {
 		fmt.Println("[a] Aggiungi un buji!")
@@ -124,10 +128,8 @@ func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile) {
 		fmt.Println("[c] Per calcolare i giorni rimanenti fumando una certa quantita' al giorno.")
 		fmt.Println("[h] Quanto devo fumare per farmi durare il materiale per un numero personalizzato di giorni?")
 		prompt("[q] Per uscire!")
-		n, err := fmt.Scanf("%s\n", &selection)
-		if err != nil || n != 1 {
-			log.Fatal(err)
-		}
+		sc.Scan()
+		selection = sc.Text()
 		switch selection {
 		case "d":
 			showColorPreferences(jsp)
@@ -137,20 +139,20 @@ func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile) {
 			break
 
 		case "s":
-			var n int
 			prompt("Quanti ultimi buji?")
-			n, err = fmt.Scanf("%d\n", &n)
-			if err != nil || n != 1 {
+			sc.Scan()
+			n, err := strconv.Atoi(sc.Text())
+			if err != nil {
 				log.Fatal(err)
 			}
 			s.ShowLastBujis(c.Date, c.Quantity, c.Quality, c.Method, c.Hour, c.Remains, n)
 			break
 
 		case "c":
-			quantitaAlGiorno := 0.0
 			prompt("Quale sarebbe la quantita' al giorno?")
-			n, err = fmt.Scanf("%f\n", &quantitaAlGiorno)
-			if err != nil || n != 1 {
+			sc.Scan()
+			quantitaAlGiorno, err := strconv.ParseFloat(sc.Text(), 64)
+			if err != nil {
 				log.Fatal(err)
 			}
 			s.HowManyDaysWithCustom(c.Quantity, c.Remains, quantitaAlGiorno)
@@ -159,8 +161,9 @@ func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile) {
 		case "h":
 			giorni := 0.0
 			prompt("Di quanti giorni stiamo parlando?")
-			n, err = fmt.Scanf("%f\n", &giorni)
-			if err != nil || n != 1 {
+			sc.Scan()
+			giorni, err := strconv.ParseFloat(sc.Text(), 64)
+			if err != nil {
 				log.Fatal(err)
 			}
 			s.HowMuchQuantityWithCustomDays(c.Quantity, c.Remains, giorni)
