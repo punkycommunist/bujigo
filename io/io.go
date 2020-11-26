@@ -38,7 +38,7 @@ const defaultSettings string = `{
 		"worst": 3.0,
 		"best": 5.0
 	}
-  }`
+}`
 
 //CsvLine is a struct for one horizontal line in csv
 type CsvLine struct {
