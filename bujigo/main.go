@@ -22,7 +22,7 @@ import (
 	m "github.com/punkycommunist/bujigo/menu"
 )
 
-const version string = "1.1.2"
+const version string = "1.1.3"
 
 func main() {
 	c.Set(c.FgHiBlue)
