@@ -13,11 +13,9 @@ Work on quality
 package main
 
 import (
-	"fmt"
 	"log"
 	"strconv"
 
-	c "github.com/fatih/color"
 	i "github.com/punkycommunist/bujigo/io"
 	m "github.com/punkycommunist/bujigo/menu"
 )
@@ -25,9 +23,6 @@ import (
 const version string = "1.1.3"
 
 func main() {
-	c.Set(c.FgHiBlue)
-	fmt.Println("[v] " + version)
-	c.Unset()
 	fileName := i.SearchCsvInCurrentDirectory()
 	lines, err := i.ReadCsv(fileName)
 	if err != nil {
@@ -78,5 +73,5 @@ func main() {
 		weightSmoked += c.Quantity[i]
 	}
 	c.Remains -= weightSmoked
-	m.PrintMenu(c)
+	m.PrintMenu(c, version)
 }

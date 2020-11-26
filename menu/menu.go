@@ -13,7 +13,10 @@ import (
 )
 
 //PrintMenu is a general stats printout
-func PrintMenu(c i.CsvFile) {
+func PrintMenu(c i.CsvFile, v string) {
+	color.Set(color.FgHiBlue)
+	fmt.Println("[v] " + v)
+	color.Unset()
 	jsp := i.ReadJSONPreferences()
 	timeInterval := c.Date[1] + " - " + c.Date[len(c.Date)-1]
 	color.Set(color.FgYellow)
@@ -114,11 +117,11 @@ func PrintMenu(c i.CsvFile) {
 	fmt.Printf("%.2f", s.DailyAvgQty(c.Date, c.Quantity, c.Hour)-s.SmokedToday(c.Date, c.Quantity, c.Hour))
 	color.Unset()
 	fmt.Printf("]")
-	SpecialFunctions(jsp, c)
+	SpecialFunctions(jsp, c, v)
 }
 
 //SpecialFunctions is a menu with a for loop that operates "special functions"
-func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile) {
+func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile, v string) {
 	var selection string
 	sc := bufio.NewScanner(os.Stdin)
 	color.Green("\n\nFunzioni speciali!")
@@ -134,6 +137,7 @@ func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile) {
 		case "d":
 			showColorPreferences(jsp)
 			break
+
 		case "a":
 			i.StartBujiSequence()
 			break
@@ -171,8 +175,9 @@ func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile) {
 
 		default:
 		case "q":
-			break
+			os.Exit(0)
 		}
+		PrintMenu(c, v)
 	}
 }
 
