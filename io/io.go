@@ -12,7 +12,14 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/fatih/color"
+	c "github.com/fatih/color"
+	"github.com/tcnksm/go-latest"
 )
+
+//Version is the version of the compiled source
+const Version string = "1.1.3"
 
 const defaultSettings string = `{
 	"QDayAverage": {
@@ -239,6 +246,26 @@ func ReadCsv(filename string) ([][]string, error) {
 	}
 
 	return lines, nil
+}
+
+//CheckForUpdates checks using the library github.com/tcnksm/go-latest and prints if something is updated
+func CheckForUpdates() {
+	githubTag := &latest.GithubTag{
+		Owner:             "punkycommunist",
+		Repository:        "bujigo",
+		FixVersionStrFunc: latest.DeleteFrontV(),
+	}
+	res, _ := latest.Check(githubTag, Version)
+	if res.Outdated {
+		c.Set(c.FgYellow, c.BgRed)
+		fmt.Printf("! Aggiornamento disponibile ! [v] %s\n", res.Current)
+
+		c.Unset()
+	} else {
+		color.Set(color.FgHiBlue)
+		fmt.Println("[v] " + Version)
+		color.Unset()
+	}
 }
 
 func prompt(s string) {

@@ -14,9 +14,6 @@ import (
 
 //PrintMenu is a general stats printout
 func PrintMenu(c i.CsvFile, v string) {
-	color.Set(color.FgHiBlue)
-	fmt.Println("[v] " + v)
-	color.Unset()
 	jsp := i.ReadJSONPreferences()
 	timeInterval := c.Date[1] + " - " + c.Date[len(c.Date)-1]
 	color.Set(color.FgYellow)

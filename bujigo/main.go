@@ -20,9 +20,8 @@ import (
 	m "github.com/punkycommunist/bujigo/menu"
 )
 
-const version string = "1.1.3"
-
 func main() {
+	i.CheckForUpdates()
 	fileName := i.SearchCsvInCurrentDirectory()
 	lines, err := i.ReadCsv(fileName)
 	if err != nil {
@@ -73,5 +72,5 @@ func main() {
 		weightSmoked += c.Quantity[i]
 	}
 	c.Remains -= weightSmoked
-	m.PrintMenu(c, version)
+	m.PrintMenu(c, i.Version)
 }
