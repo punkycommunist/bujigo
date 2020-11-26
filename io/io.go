@@ -33,6 +33,10 @@ const defaultSettings string = `{
 	"QRemainingDays": {
 	  "worst": 3.0,
 	  "best": 7.0
+	},
+	"QAvgBujiSmokedADay": {
+		"worst": 3.0,
+		"best": 5.0
 	}
   }`
 
