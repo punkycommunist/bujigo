@@ -1,6 +1,7 @@
 package io
 
 import (
+	"bufio"
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
@@ -119,32 +120,35 @@ func StartBujiSequence() {
 		log.Fatal(err)
 	}
 	defer f.Close()
+	sc := bufio.NewScanner(os.Stdin)
 	var values [5]string
 	var isToday string
 	prompt("Il buji e' stato fumato oggi? [y] per si, [n] per no e inserire la data.")
-	n, err := fmt.Scanf("%s\n", &isToday)
-	if err != nil || n != 1 {
+	sc.Scan()
+	isToday = sc.Text()
+	if err != nil {
 		log.Fatal(err)
 	}
 	if isToday == "y" { //if [y] gets pressed
 		values[0] = time.Now().Format("02/01/2006")
 	} else if isToday == "n" {
 		prompt("Che giorno era?")
-		n, err := fmt.Scanf("%s\n", &values[0])
-		if err != nil || n != 1 {
+		sc.Scan()
+		values[0] = sc.Text()
+		if err != nil {
 			log.Fatal(err)
 		}
 	} else { //if invalid character
 		log.Fatal(isToday + " invalid.")
 	}
 
-	var thisHour string
-	prompt("Il buji e' stato fumato a quest'ora? [y] per si, [n] per no e inserire la data.")
-	n, err = fmt.Scanf("%s\n", &thisHour)
-	if err != nil || n != 1 {
+	prompt("Il buji e' stato fumato a quest'ora? [y] per si, [n] per no e inserire l'ora.")
+	sc.Scan()
+	isToday = sc.Text()
+	if err != nil {
 		log.Fatal(err)
 	}
-	if thisHour == "y" { //if [y] gets pressed
+	if isToday == "y" { //if [y] gets pressed
 		values[4] = time.Now().Format("15")
 		minutes := time.Now().Format("4")
 		//from string to int to apply logic
@@ -160,30 +164,22 @@ func StartBujiSequence() {
 			t++
 			values[4] = strconv.Itoa(t)
 		}
-	} else if thisHour == "n" {
+	} else if isToday == "n" {
 		prompt("Che ore erano?")
-		n, err = fmt.Scanf("%s\n", &values[4])
-		if err != nil || n != 1 {
-			log.Fatal(err)
-		}
+		sc.Scan()
+		values[4] = sc.Text()
 	} else { //if invalid character
-		log.Fatal(thisHour + " invalid.")
+		log.Fatal(isToday + " invalid.")
 	}
 	prompt("Quantita': ")
-	n, err = fmt.Scanf("%s\n", &values[1])
-	if err != nil || n != 1 {
-		log.Fatal(err)
-	}
+	sc.Scan()
+	values[1] = sc.Text()
 	prompt("Qualita': ")
-	n, err = fmt.Scanf("%s\n", &values[2])
-	if err != nil || n != 1 {
-		log.Fatal(err)
-	}
+	sc.Scan()
+	values[2] = sc.Text()
 	prompt("Utilizzo: ")
-	n, err = fmt.Scanf("%s\n", &values[3])
-	if err != nil || n != 1 {
-		log.Fatal(err)
-	}
+	sc.Scan()
+	values[3] = sc.Text()
 	//removing the newline char from consoleReader.ReadString
 	for i := 1; i <= 3; i++ {
 		values[i] = strings.TrimSuffix(values[i], "\n")
@@ -243,6 +239,7 @@ func ReadCsv(filename string) ([][]string, error) {
 
 	return lines, nil
 }
+
 func prompt(s string) {
 	fmt.Println(s)
 	fmt.Printf("$ ")
