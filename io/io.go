@@ -13,13 +13,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fatih/color"
 	c "github.com/fatih/color"
 	"github.com/tcnksm/go-latest"
 )
 
 //Version is the version of the compiled source
-const Version string = "2.0.1"
+const Version string = "2.0.2"
 
 const defaultSettings string = `{
 	"QDayAverage": {
@@ -277,13 +276,13 @@ func CheckForUpdates() {
 	res, _ := latest.Check(githubTag, Version)
 	if res.Outdated {
 		c.Set(c.FgYellow, c.BgRed)
-		fmt.Printf("! Aggiornamento disponibile ! [v] %s\n", res.Current)
+		fmt.Printf("! Aggiornamento disponibile ! https://github.com/punkycommunist/bujigo/releases/tag/v%s\n", res.Current)
 
 		c.Unset()
 	} else {
-		color.Set(color.FgHiBlue)
+		c.Set(c.FgHiBlue)
 		fmt.Println("[v] " + Version)
-		color.Unset()
+		c.Unset()
 	}
 }
 
