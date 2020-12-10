@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -266,22 +267,45 @@ func ReadCsv(filename string) ([][]string, error) {
 	return lines, nil
 }
 
+//IsOnline checks for internet connectivity requesting an http connection to an arbitrary url
+func IsOnline() bool {
+	//Make a request to icanhazip.com
+	//We need the error only, nothing else :)
+	_, err := http.Get("https://icanhazip.com/")
+	//err = nil means online
+	if err == nil {
+		return true
+	}
+	//if the "return statement" in the if didn't executed,
+	//this one will execute surely
+	return false
+}
+
 //CheckForUpdates checks using the library github.com/tcnksm/go-latest and prints if something is updated
 func CheckForUpdates() {
-	githubTag := &latest.GithubTag{
-		Owner:             "punkycommunist",
-		Repository:        "bujigo",
-		FixVersionStrFunc: latest.DeleteFrontV(),
-	}
-	res, _ := latest.Check(githubTag, Version)
-	if res.Outdated {
-		c.Set(c.FgYellow, c.BgRed)
-		fmt.Printf("! Aggiornamento disponibile ! https://github.com/punkycommunist/bujigo/releases/tag/v%s\n", res.Current)
+	if IsOnline() {
+		githubTag := &latest.GithubTag{
+			Owner:             "punkycommunist",
+			Repository:        "bujigo",
+			FixVersionStrFunc: latest.DeleteFrontV(),
+		}
+		res, err := latest.Check(githubTag, Version)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if res.Outdated {
+			c.Set(c.FgYellow, c.BgRed)
+			fmt.Printf("! Aggiornamento disponibile ! https://github.com/punkycommunist/bujigo/releases/tag/v%s\n", res.Current)
 
-		c.Unset()
+			c.Unset()
+		} else {
+			c.Set(c.FgHiBlue)
+			fmt.Println("[v] " + Version)
+			c.Unset()
+		}
 	} else {
 		c.Set(c.FgHiBlue)
-		fmt.Println("[v] " + Version)
+		fmt.Println("Nessuna connessione internet! Impossibile controllare aggiornamenti.")
 		c.Unset()
 	}
 }
