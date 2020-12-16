@@ -48,7 +48,7 @@ func TotalDaysElapsed(date []string, hour []int) float64 {
 	if err != nil {
 		log.Println(err)
 	}
-	t1 := time.Date(fYear, time.Month(fMonth), fDay, int(hour[1]), 0, 0, 0, t.Location())
+	t1 := time.Date(fYear, time.Month(fMonth), fDay, 0, 0, 0, 0, t.Location())
 	days := t2.Sub(t1).Hours() / 24.0
 	return days
 }
