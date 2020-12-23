@@ -221,19 +221,21 @@ func SearchCsvInCurrentDirectory() string {
 		log.Fatal(fileErr)
 	}
 	for i := 0; i < len(files); i++ {
-		if files[i][len(files[i])-4:] == ".csv" {
-			return files[i]
+		if len(files[i]) >= 8 {
+			if files[i][len(files[i])-4:] == ".csv" {
+				return files[i]
+			}
 		}
 	}
 	sc := bufio.NewScanner(os.Stdin)
-	log.Println("No .csv file found. Do you want to create the default [buji.csv]?")
-	prompt("How much material do you have to smoke? (1g = 1.0): ")
+	log.Println("Nessun file .csv adatto trovato. Il nome del file deve essere lungo almeno 8 caratteri compresa l'estensione .csv. Vuoi creare il default [booji.csv]?")
+	prompt("Quanto materiale ti resta da fumare? (se inserisci 1, o 1.5 saranno 1g o 1.5g): ")
 	sc.Scan()
 	material, err := strconv.ParseFloat(sc.Text(), 64)
 	if err != nil {
 		log.Fatal(err)
 	}
-	f, err := os.OpenFile("buji.csv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile("booji.csv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -241,10 +243,10 @@ func SearchCsvInCurrentDirectory() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	prompt("You have also to enter a buji to start. Press Enter.")
+	prompt("Devi inserire anche un primo buji. Premi [Enter].")
 	fmt.Scanln()
 	StartBujiSequence()
-	return "buji.csv"
+	return "booji.csv"
 }
 
 // ReadCsv accepts a file and returns its content as a multi-dimentional type
