@@ -149,7 +149,7 @@ func StartBujiSequence() {
 	sc := bufio.NewScanner(os.Stdin)
 	var values [5]string
 	var isToday string
-	prompt("Il buji e' stato fumato oggi? [y] per si, [n] per no e inserire la data.")
+	prompt("Il buji e' stato fumato oggi? [y] per si, [n] per no e inserire la data.\nLa data dovra' avere formato GG/MM/AAAA (es. 31/12/2020)")
 	sc.Scan()
 	isToday = sc.Text()
 	if err != nil {
