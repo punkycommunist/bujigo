@@ -16,6 +16,9 @@ import (
 func PrintMenu(c i.CsvFile, v string) {
 	jsp := i.ReadJSONPreferences()
 	timeInterval := c.Date[1] + " - " + c.Date[len(c.Date)-1]
+	color.Set(color.FgCyan)
+	fmt.Printf("************ MENU ************\n")
+	color.Unset()
 	color.Set(color.FgYellow)
 	fmt.Printf("Intervallo " + timeInterval + "\n")
 	color.Unset()
@@ -127,7 +130,12 @@ func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile, v string) {
 		fmt.Println("[s] Mostra gli ultimi buji!")
 		fmt.Println("[c] Per calcolare i giorni rimanenti fumando una certa quantita' al giorno.")
 		fmt.Println("[h] Quanto devo fumare per farmi durare il materiale per un numero personalizzato di giorni?")
-		prompt("[q] Per uscire!")
+		fmt.Println("[q] Per uscire!")
+		color.Set(color.FgCyan)
+		fmt.Printf("******************************\n")
+		color.Unset()
+		fmt.Printf("$ ")
+
 		sc.Scan()
 		selection = sc.Text()
 		switch selection {
