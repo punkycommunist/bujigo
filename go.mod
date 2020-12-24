@@ -1,4 +1,4 @@
-module www.github.com/punkycommunist/bujigo
+module github.com/punkycommunist/bujigo
 
 go 1.15
 
