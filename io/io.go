@@ -228,7 +228,7 @@ func SearchCsvInCurrentDirectory() string {
 		}
 	}
 	sc := bufio.NewScanner(os.Stdin)
-	log.Println("Nessun file .csv adatto trovato. Il nome del file deve essere lungo almeno 8 caratteri compresa l'estensione .csv. Vuoi creare il default [booji.csv]?")
+	log.Println("Nessun file .csv adatto trovato. Il nome del file deve essere lungo almeno 8 caratteri compresa l'estensione .csv. Sto creando il default [booji.csv]?")
 	prompt("Quanto materiale ti resta da fumare? (se inserisci 1, o 1.5 saranno 1g o 1.5g): ")
 	sc.Scan()
 	material, err := strconv.ParseFloat(sc.Text(), 64)
