@@ -40,7 +40,7 @@ func TotalDaysElapsed(date []string, hour []int) float64 {
 	nowHour, err := strconv.Atoi(time.Now().Format("15"))
 	nowMinute, err := strconv.Atoi(time.Now().Format("4"))
 	nowSecond, err := strconv.Atoi(time.Now().Format("5"))
-	t, err := TimeIn(time.Now(), "Europe/Rome")
+	t, err := TimeIn(time.Now(), "Local")
 	if err != nil {
 		log.Fatal("Europe/Rome", "<time unknown>")
 	}

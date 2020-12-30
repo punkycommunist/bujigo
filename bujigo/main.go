@@ -22,7 +22,8 @@ import (
 
 func main() {
 	i.CheckForUpdates()
-	fileName := i.SearchCsvInCurrentDirectory()
+	jsp := i.ReadJSONPreferences()
+	fileName := i.SearchCsvInCurrentDirectory(jsp)
 	lines, err := i.ReadCsv(fileName)
 	if err != nil {
 		panic(err)

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -19,7 +20,7 @@ import (
 )
 
 //Version is the version of the compiled source
-const Version string = "2.1.1"
+const Version string = "2.2.0"
 
 const defaultSettings string = `{
 	"QDayAverage": {
@@ -37,6 +38,9 @@ const defaultSettings string = `{
 	"QAvgBujiSmokedADay": {
 		"worst": 3.0,
 		"best": 5.0
+	},
+	"QOffsiteArchive": {
+		"value": true
 	}
 }`
 
@@ -78,6 +82,9 @@ type JSONPreferences struct {
 		Worst float64 `json:"worst"`
 		Best  float64 `json:"best"`
 	} `json:"QAvgBujiSmokedADay"`
+	QOffsiteArchive struct {
+		Value bool `json:"value"`
+	} `json:"QOffsiteArchive"`
 }
 
 //ReadJSONPreferences reads from the settings.json file in the directory of the program
@@ -139,8 +146,8 @@ func WriteJSONPreferences(JSONPreferences JSONPreferences) {
 }
 
 //StartBujiSequence initializes the process to add another buji in the database
-func StartBujiSequence() {
-	filename := SearchCsvInCurrentDirectory()
+func StartBujiSequence(s JSONPreferences) {
+	filename := SearchCsvInCurrentDirectory(s)
 	f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
@@ -210,12 +217,16 @@ func StartBujiSequence() {
 	for i := 1; i <= 3; i++ {
 		values[i] = strings.TrimSuffix(values[i], "\n")
 	}
-	s := "\n" + values[0] + "," + values[1] + "," + values[2] + "," + values[3] + "," + values[4] + ","
-	f.WriteString(s)
+	str := "\n" + values[0] + "," + values[1] + "," + values[2] + "," + values[3] + "," + values[4] + ","
+	sendToServer := "\"" + str[1:] + "\""
+	if s.QOffsiteArchive.Value {
+		sendMessageToSynology(sendToServer)
+	}
+	f.WriteString(str)
 }
 
 //SearchCsvInCurrentDirectory searches .csv files by getting an array of the elements present in that directory
-func SearchCsvInCurrentDirectory() string {
+func SearchCsvInCurrentDirectory(s JSONPreferences) string {
 	files, fileErr := filepath.Glob("*")
 	if fileErr != nil {
 		log.Fatal(fileErr)
@@ -245,7 +256,7 @@ func SearchCsvInCurrentDirectory() string {
 	}
 	prompt("Devi inserire anche un primo buji. Premi [Enter].")
 	fmt.Scanln()
-	StartBujiSequence()
+	StartBujiSequence(s)
 	return "booji.csv"
 }
 
@@ -310,6 +321,18 @@ func CheckForUpdates() {
 		fmt.Println("Nessuna connessione internet! Impossibile controllare aggiornamenti.")
 		c.Unset()
 	}
+}
+
+func sendMessageToSynology(message string) {
+	connHost := "192.168.1.6"
+	connPort := ":420"
+	connProt := "tcp"
+	conn, err := net.Dial(connProt, connHost+connPort)
+	if err == nil {
+		fmt.Fprintf(conn, message+"\n")
+		fmt.Println("Buji mandato correttamente.")
+	}
+	conn.Close()
 }
 
 func prompt(s string) {

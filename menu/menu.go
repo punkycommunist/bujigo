@@ -144,7 +144,7 @@ func SpecialFunctions(jsp i.JSONPreferences, c i.CsvFile, v string) {
 			break
 
 		case "a":
-			i.StartBujiSequence()
+			i.StartBujiSequence(jsp)
 			break
 
 		case "s":
