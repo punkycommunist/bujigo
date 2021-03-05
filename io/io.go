@@ -90,25 +90,6 @@ type JSONPreferences struct {
 //ReadJSONPreferences reads from the settings.json file in the directory of the program
 func ReadJSONPreferences() JSONPreferences {
 	var JSONPreferences JSONPreferences
-	// files, err := filepath.Glob("*")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// for i := 0; i < len(files); i++ {
-	// 	if files[i] == "settings.json" {
-	// 		jsonFile, err := os.Open("settings.json")
-	// 		if err != nil {
-	// 			log.Fatal(err)
-	// 		}
-	// 		// read our opened jsonFile as a byte array.
-	// 		byteValue, _ := ioutil.ReadAll(jsonFile)
-	// 		// we unmarshal our byteArray which contains our
-	// 		// jsonFile's content into 'users' which we defined above
-	// 		json.Unmarshal(byteValue, &JSONPreferences)
-	// 		jsonFile.Close()
-	// 		return JSONPreferences
-	// 	}
-	// }
 	jsonFile, err := os.Open("settings.json")
 	if err != nil {
 		var progress string
