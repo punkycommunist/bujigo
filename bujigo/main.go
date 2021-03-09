@@ -7,7 +7,6 @@ TODO:
 Calculate over how many days i smoked the last x weight
 Calculate how much i smoked on the last x day
 Update tools
-Optional PGP Encryption
 Work on quality
 */
 
