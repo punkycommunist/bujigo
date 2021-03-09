@@ -1,3 +1,4 @@
+//go: generate goversioninfo -icon=ganja.ico
 /*
 STANDARD:
 DATA,QUANTITA',QUALITA',METODO,ORE
