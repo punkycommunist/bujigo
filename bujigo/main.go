@@ -1,4 +1,4 @@
-//go: generate goversioninfo -icon=ganja.ico
+//go:generate goversioninfo -icon=ganja.ico -manifest=bujigo.exe.manifest
 /*
 STANDARD:
 DATA,QUANTITA',QUALITA',METODO,ORE
