@@ -40,7 +40,7 @@ const defaultSettings string = `{
 		"best": 5.0
 	},
 	"QOffsiteArchive": {
-		"value": true
+		"value": false
 	}
 }`
 
