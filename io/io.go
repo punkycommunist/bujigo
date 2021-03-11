@@ -198,10 +198,9 @@ func StartBujiSequence(s JSONPreferences) {
 	for i := 1; i <= 3; i++ {
 		values[i] = strings.TrimSuffix(values[i], "\n")
 	}
-	str := "\n" + values[0] + "," + values[1] + "," + values[2] + "," + values[3] + "," + values[4] + ","
-	sendToServer := "\"" + str[1:] + "\""
+	str := values[0] + "," + values[1] + "," + values[2] + "," + values[3] + "," + values[4] + "," + "\n"
 	if s.QOffsiteArchive.Value {
-		sendMessageToSynology(sendToServer)
+		sendMessageToSynology(str)
 	}
 	f.WriteString(str)
 }
@@ -309,11 +308,15 @@ func sendMessageToSynology(message string) {
 	connPort := ":4200"
 	connProt := "tcp"
 	conn, err := net.Dial(connProt, connHost+connPort)
+	defer conn.Close()
 	if err == nil {
 		fmt.Fprintf(conn, message+"\n")
-		fmt.Println("Buji mandato correttamente.")
+		//listen for reply
+		reply, _ := bufio.NewReader(conn).ReadString('\n')
+		fmt.Print("Risposta server: " + reply)
+	} else {
+		log.Println(err)
 	}
-	conn.Close()
 }
 
 func prompt(s string) {
