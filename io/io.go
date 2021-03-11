@@ -306,7 +306,7 @@ func CheckForUpdates() {
 
 func sendMessageToSynology(message string) {
 	connHost := "192.168.1.6"
-	connPort := ":420"
+	connPort := ":4200"
 	connProt := "tcp"
 	conn, err := net.Dial(connProt, connHost+connPort)
 	if err == nil {
