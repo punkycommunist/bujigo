@@ -230,7 +230,7 @@ func SearchCsvInCurrentDirectory(s JSONPreferences) string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	_, err = f.WriteString("giorno,quantita,qualita,tipo,ore," + fmt.Sprintf("%.2f", material))
+	_, err = f.WriteString("giorno,quantita,qualita,tipo,ore," + fmt.Sprintf("%.2f", material) + "\n")
 	if err != nil {
 		log.Fatal(err)
 	}
