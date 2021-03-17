@@ -20,7 +20,7 @@ import (
 )
 
 //Version is the version of the compiled source
-const Version string = "2.2.2"
+const Version string = "2.3.0"
 
 const defaultSettings string = `{
 	"QDayAverage": {
