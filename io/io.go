@@ -201,8 +201,9 @@ func StartBujiSequence(s JSONPreferences) {
 	str := values[0] + "," + values[1] + "," + values[2] + "," + values[3] + "," + values[4] + "," + "\n"
 	if s.QOffsiteArchive.Value {
 		sendMessageToSynology(str)
+	} else {
+		f.WriteString(str)
 	}
-	f.WriteString(str)
 }
 
 //SearchCsvInCurrentDirectory searches .csv files by getting an array of the elements present in that directory
